@@ -1,0 +1,106 @@
+CREATE TABLE Country (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL
+)
+
+CREATE TABLE State (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+	CountryId INT NOT NULL
+)
+
+ALTER TABLE State ADD CONSTRAINT FK_State_Country FOREIGN KEY (CountryId) REFERENCES Country(Id)
+
+CREATE TABLE City (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+	StateId INT NOT NULL
+)
+
+ALTER TABLE City ADD CONSTRAINT FK_City_State FOREIGN KEY (StateId) REFERENCES State(Id)
+
+
+CREATE TABLE Corporation (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+	Address VARCHAR(255) NOT NULL,
+	CityId INT NOT NULL
+)
+
+ALTER TABLE Corporation ADD CONSTRAINT FK_Corporation_City FOREIGN KEY (CityId) REFERENCES City(Id)
+
+CREATE TABLE ClientCategory (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+)
+
+CREATE TABLE Client (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+	Address VARCHAR(255) NOT NULL,
+	CityId INT NOT NULL,
+	ClientCategoryId INT NOT NULL
+)
+
+ALTER TABLE Client ADD CONSTRAINT FK_Client_City FOREIGN KEY (CityId) REFERENCES City(Id)
+
+ALTER TABLE Client ADD CONSTRAINT FK_Client_ClientCategory FOREIGN KEY (ClientCategoryId) REFERENCES ClientCategory(Id)
+
+CREATE TABLE ProductCategory (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+)
+
+CREATE TABLE Manufacturer (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+	CountryId INT NOT NULL 
+)
+
+ALTER TABLE Manufacturer ADD CONSTRAINT FK_Manufacturer_Country FOREIGN KEY (CountryId) REFERENCES Country(Id)
+
+CREATE TABLE Product (
+	Id INT IDENTITY PRIMARY KEY,
+	Description VARCHAR(255) NOT NULL,
+	SKU UNIQUEIDENTIFIER NOT NULL DEFAULT NEWID(),
+	ProductCategoryId INT NOT NULL,
+	ManufacturerId INT NOT NULL
+)
+
+ALTER TABLE Product ADD CONSTRAINT FK_Product_ProductCategory FOREIGN KEY (ProductCategoryId) REFERENCES ProductCategory(Id)
+ALTER TABLE Product ADD CONSTRAINT FK_Product_Manufacturer FOREIGN KEY (ManufacturerId) REFERENCES Manufacturer(Id)
+
+CREATE TABLE ProductPrice (
+	Id INT IDENTITY PRIMARY KEY,
+	CorporationId INT NOT NULL,
+	ProductId INT NOT NULL,
+	Price DECIMAL(13,2) NOT NULL
+)
+
+ALTER TABLE ProductPrice ADD CONSTRAINT FK_ProductPrice_Corporation FOREIGN KEY (CorporationId) REFERENCES Corporation(Id)
+ALTER TABLE ProductPrice ADD CONSTRAINT FK_ProductPrice_Product FOREIGN KEY (ProductId) REFERENCES Product(Id)
+
+CREATE TABLE Sales (
+	Id INT IDENTITY PRIMARY KEY,
+	SaleDate DATETIME NOT NULL,
+	ProductPriceId INT NOT NULL,
+	ClientId INT NOT NULL,
+	Amount INT NOT NULL
+)
+
+ALTER TABLE Sales ADD CONSTRAINT FK_Sales_ProductPrice FOREIGN KEY (ProductPriceId) REFERENCES ProductPrice(Id)
+ALTER TABLE Sales ADD CONSTRAINT FK_Sales_Client FOREIGN KEY (ClientId) REFERENCES Client(Id)
+
+/*
+DROP TABLE Sales
+DROP TABLE ProductPrice
+DROP TABLE Product
+DROP TABLE ProductCategory
+DROP TABLE Client
+DROP TABLE ClientCategory
+DROP TABLE Corporation
+DROP TABLE Manufacturer
+DROP TABLE City
+DROP TABLE State
+DROP TABLE Country
+*/
