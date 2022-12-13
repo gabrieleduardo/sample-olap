@@ -1,0 +1,45 @@
+# sample-olap
+Exemplo de modelagem OLAP apresentada como trabalho na disciplina de Modelagem de Dados do curso de Mestrado em Ciência da Computação da Universidade Federal de Uberlândia.
+
+- Scripts desenvolvidos para uso com o SGBD: Sql Server;
+- Necessário datatabase SalesDB;
+- Necessário database SalesDW;
+- Análise dos planos de execução e geração dos diagramas ER pelo Sql Server Management Studio (SSMS).
+
+## Modelagem de Banco de Dados Relacional - Modelo OLTP
+
+![Oltp Database Model](oltp.png)
+
+## Modelo Star - OLAP
+
+![Olap Database Model](olap.png)
+
+## Problema para comparação
+
+Calcular o total de vendas de produtos chineses nas situações onde o clientes é de outro domicílio. Exemplo: O cliente com domicílio na cidade A, faz uma compra de produtos chineses na cidade B. 
+
+### OLAP 
+
+O primeiro ponto a ser notado é a complexidade da consulta. Como o precisamos saber a nacionalidade do fabricante, a cidade do cliente e a cidade da empresa, precisamos assim de algumas junções para chegar nessas informações.
+Se pensarmos em adicionar a descrição do país do produto, estado e cidade tanto do cliente quanto da empresa, a complexidade seria ainda maior. 
+Nota: Quer entender melhor a complexidade? Faça uma consulta que traga essas informações no agrupamento e compare o plano de execução.
+
+```{sql}
+SELECT 
+	SUM(S.Amount * PP.Price) AS SalesValue
+FROM SalesDB.dbo.Sales S
+INNER JOIN SalesDB.dbo.ProductPrice PP ON PP.Id = S.ProductPriceId
+-- Joins from product
+INNER JOIN SalesDB.dbo.Product P ON P.Id = PP.ProductId
+INNER JOIN SalesDB.dbo.Manufacturer M ON M.Id = P.ManufacturerId
+-- Joins from Corporation
+INNER JOIN SalesDB.dbo.Corporation CP ON CP.Id = PP.CorporationId
+-- Joins from Client
+INNER JOIN SalesDB.dbo.Client CL ON CL.Id = S.ClientId
+WHERE
+	M.CountryId = 2
+	AND CL.CityId <> CP.CityId
+```
+
+
+

@@ -1,7 +1,7 @@
 USE SalesDW
 GO
 
-MERGE SalesDW.dbo.Country AS T
+MERGE SalesDW.dbo.TD_Country AS T
 USING (
 	SELECT Id, Description
 	FROM SalesDB.dbo.Country 
@@ -10,7 +10,7 @@ USING (
 WHEN MATCHED THEN UPDATE SET T.Description = S.Description
 WHEN NOT MATCHED THEN INSERT (Description) VALUES (Description);
 
-MERGE SalesDW.dbo.State AS T
+MERGE SalesDW.dbo.TD_State AS T
 USING (
 	SELECT Id, Description, CountryId
 	FROM SalesDB.dbo.State 
@@ -20,7 +20,7 @@ WHEN MATCHED THEN UPDATE SET T.Description = S.Description,
 	T.CountryId = S.CountryId
 WHEN NOT MATCHED THEN INSERT (Description, CountryId) VALUES (Description, CountryId);
 
-MERGE SalesDW.dbo.City AS T
+MERGE SalesDW.dbo.TD_City AS T
 USING (
 	SELECT Id, Description, StateId
 	FROM SalesDB.dbo.City 
@@ -30,7 +30,7 @@ WHEN MATCHED THEN UPDATE SET T.Description = S.Description,
 	T.StateId = S.StateId
 WHEN NOT MATCHED THEN INSERT (Description, StateId) VALUES (Description, StateId);
 
-MERGE SalesDW.dbo.Corporation AS T
+MERGE SalesDW.dbo.TD_Corporation AS T
 USING (
 	SELECT Id, Description, Address, CityId
 	FROM SalesDB.dbo.Corporation 
@@ -41,7 +41,7 @@ WHEN MATCHED THEN UPDATE SET T.Description = S.Description,
 	T.CityId = S.CityId
 WHEN NOT MATCHED THEN INSERT (Description, Address, CityId) VALUES (Description, Address, CityId);
 
-MERGE SalesDW.dbo.ClientCategory AS T
+MERGE SalesDW.dbo.TD_ClientCategory AS T
 USING (
 	SELECT Id, Description
 	FROM SalesDB.dbo.ClientCategory 
@@ -50,7 +50,7 @@ USING (
 WHEN MATCHED THEN UPDATE SET T.Description = S.Description
 WHEN NOT MATCHED THEN INSERT (Description) VALUES (Description);
 
-MERGE SalesDW.dbo.Client AS T
+MERGE SalesDW.dbo.TD_Client AS T
 USING (
 	SELECT Id, Description, Address, CityId, ClientCategoryId
 	FROM SalesDB.dbo.Client 
@@ -62,7 +62,7 @@ WHEN MATCHED THEN UPDATE SET T.Description = S.Description,
 	T.ClientCategoryId = S.ClientCategoryId
 WHEN NOT MATCHED THEN INSERT (Description, Address, CityId, ClientCategoryId) VALUES (Description, Address, CityId, ClientCategoryId);
 
-MERGE SalesDW.dbo.ProductCategory AS T
+MERGE SalesDW.dbo.TD_ProductCategory AS T
 USING (
 	SELECT Id, Description
 	FROM SalesDB.dbo.ProductCategory 
@@ -71,7 +71,7 @@ USING (
 WHEN MATCHED THEN UPDATE SET T.Description = S.Description
 WHEN NOT MATCHED THEN INSERT (Description) VALUES (Description);
 
-MERGE SalesDW.dbo.Manufacturer AS T
+MERGE SalesDW.dbo.TD_Manufacturer AS T
 USING (
 	SELECT Id, Description, CountryId
 	FROM SalesDB.dbo.Manufacturer 
@@ -81,7 +81,7 @@ WHEN MATCHED THEN UPDATE SET T.Description = S.Description,
 	T.CountryId = S.CountryId
 WHEN NOT MATCHED THEN INSERT (Description, CountryId) VALUES (Description, CountryId);
 
-MERGE SalesDW.dbo.Product AS T
+MERGE SalesDW.dbo.TD_Product AS T
 USING (
 	SELECT Id, Description, SKU, ProductCategoryId, ManufacturerId
 	FROM SalesDB.dbo.Product 
@@ -93,7 +93,7 @@ WHEN MATCHED THEN UPDATE SET T.Description = S.Description,
 	T.ManufacturerId = S.ManufacturerId
 WHEN NOT MATCHED THEN INSERT (Description, SKU, ProductCategoryId, ManufacturerId) VALUES (Description, SKU, ProductCategoryId, ManufacturerId);
 
-MERGE SalesDW.dbo.ProductPrice AS T
+MERGE SalesDW.dbo.TD_ProductPrice AS T
 USING (
 	SELECT Id, CorporationId, ProductId, Price
 	FROM SalesDB.dbo.ProductPrice 
